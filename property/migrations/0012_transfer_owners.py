@@ -5,11 +5,13 @@ def transfer_owners(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
     Owner = apps.get_model('property', 'Owner')
 
-    for flat in Flat.objects.all():
-        owner, created = Owner.objects.get_or_create(owner=flat.owner, defaults={
-            'owners_phonenumber': flat.owners_phonenumber,
-            'owner_pure_phone': flat.owner_pure_phone,
-        }
+    for flat in Flat.objects.all().iterator():
+        Owner.objects.get_or_create(
+            name=flat.owner,
+            defaults={
+                'phonenumber': flat.owners_phonenumber,
+                'pure_phone': flat.owner_pure_phone,
+            }
         )
 
 
